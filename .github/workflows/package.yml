@@ -10,11 +10,6 @@ jobs:
   build-sdist:
     name: 🧑‍🍳 sdist
     runs-on: "ubuntu-latest"
-    strategy:
-      fail-fast: false
-      matrix:
-        os: ["ubuntu-latest"]
-        python-version: [ "11" ]
     defaults:
       run:
         shell: bash
@@ -24,7 +19,7 @@ jobs:
       - uses: actions/setup-python@v5
         id: setup-python
         with:
-          python-version: "3.${{ matrix.python-version }}"
+          python-version: "3.11"
 
       - run: |
           python -m pip install --upgrade pip
@@ -45,8 +40,91 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # os: ["ubuntu-latest", "macos-13", "macos-latest", "windows-latest"]
-        os: ["ubuntu-latest"]
+        os: ["ubuntu-latest", "macos-13", "macos-latest", "windows-latest", "ubuntu-24.04-arm", "windows-11-arm"]
+        python-version: [ "11" ]
+    defaults:
+      run:
+        shell: bash
+    env:
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v5
+        id: setup-python
+        with:
+          python-version: "3.${{ matrix.python-version }}"
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: setuptools_rust_bundled_sdist
+          path: dist
+
+      - name: setup environment
+        run: |
+          [[ "${{ runner.os }}" = "Windows" ]] && python -X utf8 script.py || true
+          yes | rustup self uninstall || true
+          python -m pip install --upgrade pip
+          python -m pip install wheel setuptools maturin
+          rm -rf setuptools_rust_bundled
+
+      - name: installing setuptools-rust-bundled
+        run: python -m pip install -v dist/*
+
+      - name: installing example
+        run: python -m pip install --no-build-isolation -v ./example
+      
+      - name: executing
+        run: |
+          rm -rf example
+          python -c "import example; from pathlib import Path; print(example.__file__); print(list(Path(example.__file__).parent.glob('**/*'))); assert example.get_value() == 123"
+
+  build-bdist:
+    name: 🧑‍🍳 bdist
+    runs-on: "ubuntu-latest"
+    strategy:
+      fail-fast: false
+      matrix:
+          plats: [manylinux-2_17-i686, manylinux-2_17-x86_64, manylinux-2_17-aarch64, macosx-11_0-arm64, macosx-10_12-x86_64]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v5
+        id: setup-python
+        with:
+          python-version: "3.11"
+
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install wheel setuptools requests tomli
+          python setup.py bdist_wheel -p ${{ matrix.plats }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: setuptools_rust_bundled_bdist-${{ matrix.plats }}
+          path: dist/*
+          if-no-files-found: error
+          overwrite: true
+
+  test-bdist:
+    name: 📋 bdist
+    needs: [build-bdist]
+    runs-on: ${{ matrix.system.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        system:
+          - os: ubuntu-latest
+            plats: manylinux-2_17-x86_64
+          - os: macos-13
+            plats: macosx-10_12-x86_64
+          - os: macos-latest
+            plats: macosx-11_0-arm64
+          - os: ubuntu-24.04-arm
+            plats: manylinux-2_17-aarch64
         python-version: [ "11" ]
     defaults:
       run:
@@ -61,12 +139,24 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: setuptools_rust_bundled_sdist
+          name: setuptools_rust_bundled_bdist-${{ matrix.system.plats }}
           path: dist
 
-      - run: |
+      - name: setup environment
+        run: |
+          [[ "${{ runner.os }}" = "Windows" ]] && python -X utf8 script.py || true
           yes | rustup self uninstall || true
-          python -m pip install -vvv dist/*
-          python -m pip install -vvv example
+          python -m pip install --upgrade pip
+          python -m pip install wheel setuptools maturin
+          rm -rf setuptools_rust_bundled
+
+      - name: installing setuptools-rust-bundled
+        run: python -m pip install -v dist/*
+
+      - name: installing example
+        run: python -m pip install --no-build-isolation -v ./example
+      
+      - name: executing
+        run: |
           rm -rf example
-          python -c "import example"
+          python -c "import example; from pathlib import Path; print(example.__file__); print(list(Path(example.__file__).parent.glob('**/*'))); assert example.get_value() == 123"

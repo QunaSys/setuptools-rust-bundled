@@ -1,1 +1,1 @@
-import rust
+from .example import *

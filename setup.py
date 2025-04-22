@@ -12,7 +12,6 @@ plat_name = None
 
 class bdist_wheel(_bdist_wheel):
     def run(self):
-        print("bdist_egg", dir(self))
         global plat_name
         self.root_is_pure = False
         plat_name = self.plat_name
@@ -42,7 +41,6 @@ class install_data(_install_data):
             os_name = tokens[0]
             version = "-".join(tokens[1:-1])
             arch = tokens[-1]
-            print(os_name, version, arch)
             return os_name, version, arch
 
 
@@ -67,6 +65,8 @@ class install_data(_install_data):
                 arch = "powerpc"
             if arch == "ppc64":
                 arch = "powerpc64"
+            if arch == "amd64":
+                arch = "x86_64"
             if arch == "armv7l":
                 # 'l' means little endian, that is default.
                 arch = "armv7"
@@ -108,6 +108,7 @@ class install_data(_install_data):
             data_files = []
             print(f"📦 setup hook: plat_name = {plat_name}")
             host_triples = gen_triple(plat_name)
+            print(f"Host triples = {host_triples}")
 
             # Load manifest
             script_dir = Path(__file__).resolve().parent
@@ -158,17 +159,19 @@ class install_data(_install_data):
                         print(f"Extracting {archive_path}")
                         with tarfile.open(archive_path, "r:gz") as tar:
                             tar.extractall(path=temp_dir)
+                        print("Finished extracting")
 
                     script_file = extracted_path / "install.sh"
-                    args = [script_file, f"--prefix={dest_dir_host}"]
-                    print(f"Running {script_file} with {args=}")
+                    args = ["sh", script_file, f"--prefix={dest_dir_host}"]
                     if platform.system() == "Linux":
                         args.append("--disable-ldconfig")
+                    print(f"Executing {args}")
                     subprocess.run(args)
+                    print("Finished executing")
                     for file in dest_dir_host.glob("**/*"):
                         if file.is_file():
-                            relpath = file.relative_to(script_dir)
-                            data_files.append((relpath, [str(file)]))
+                            relpath = file.parent.relative_to(script_dir)
+                            data_files.append(("setuptools_rust_bundled" / relpath, [str(file)]))
             return data_files
 
         self.data_files = build_data_files(plat_name)
