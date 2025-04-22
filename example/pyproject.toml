@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=64", "requires", "tomli", "maturin>=1.0,<2.0"]
+build-backend = "setuptools_rust_bundled.maturin"
+backend-path = [".."]
+
+[project]
+name = "example"
+version = "0.1.0"
+license = { text = "MIT" }
+authors = [{ name = "Yasuo Ozu", email = "opensource@qunasys.com" }]
+
+[tool.maturin]
+python-source = "."
+module-name = "example.rust"
