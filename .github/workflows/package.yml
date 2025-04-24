@@ -40,12 +40,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu-latest", "macos-13", "macos-latest", "windows-latest", "ubuntu-24.04-arm", "windows-11-arm"]
+        os: ["ubuntu-latest", "macos-13", "macos-latest", "ubuntu-24.04-arm"]
         python-version: [ "11" ]
     defaults:
       run:
         shell: bash
     env:
+      # Needed to avoid format error in Windows
       PYTHONUTF8: "1"
     steps:
       - uses: actions/checkout@v3
@@ -85,7 +86,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-          plats: [manylinux-2_17-i686, manylinux-2_17-x86_64, manylinux-2_17-aarch64, macosx-11_0-arm64, macosx-10_12-x86_64]
+        plats: [manylinux-2_17-i686, manylinux-2_17-x86_64, manylinux-2_17-aarch64, macosx-11_0-arm64, macosx-10_12-x86_64, win-amd64, win-arm64]
     defaults:
       run:
         shell: bash
@@ -125,6 +126,10 @@ jobs:
             plats: macosx-11_0-arm64
           - os: ubuntu-24.04-arm
             plats: manylinux-2_17-aarch64
+          - os: windows-latest
+            plats: win-amd64
+          - os: windows-11-arm
+            plats: win-arm64
         python-version: [ "11" ]
     defaults:
       run:

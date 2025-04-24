@@ -162,7 +162,7 @@ class install_data(_install_data):
                         print("Finished extracting")
 
                     script_file = extracted_path / "install.sh"
-                    args = ["sh", script_file, f"--prefix={dest_dir_host}"]
+                    args = ["bash", str(script_file), f"--prefix={str(dest_dir_host)}"]
                     if platform.system() == "Linux":
                         args.append("--disable-ldconfig")
                     print(f"Executing {args}")
