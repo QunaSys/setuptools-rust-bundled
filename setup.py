@@ -1,4 +1,4 @@
-
+import sysconfig
 import setuptools
 try:
     from setuptools.command.bdist_wheel import bdist_wheel as _bdist_wheel
@@ -13,8 +13,10 @@ plat_name = None
 class bdist_wheel(_bdist_wheel):
     def run(self):
         global plat_name
-        self.root_is_pure = False
-        self.universal = True
+        # self.root_is_pure = False
+        self.python_tag = "py3"
+        if not self.plat_name_supplied or not self.plat_name:
+            self.plat_name = sysconfig.get_platform()
         plat_name = self.plat_name
         _bdist_wheel.run(self)
 
