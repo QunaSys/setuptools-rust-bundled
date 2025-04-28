@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools-rust", "setuptools-rust-bundled"]
+build-backend = "setuptools_rust_bundled.setuptools"
+
+[project]
+name = "example"
+version = "0.1.0"
+license = { text = "MIT" }
+authors = [{ name = "Yasuo Ozu", email = "opensource@qunasys.com" }]
+
+[tool.maturin]
+python-source = "."
+module-name = "example.example"
+
+[[tool.setuptools-rust.ext-modules]]
+target = "example.example"
+
+[tool.setuptools.packages]
+find = { where = ["."] }

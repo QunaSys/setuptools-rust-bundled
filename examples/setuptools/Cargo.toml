@@ -1,0 +1,13 @@
+[package]
+name = "example"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies.pyo3]
+version = "0.22.6"
+features = ["extension-module", "macros"]
+
+[lib]
+path = "lib.rs"
+crate-type = ["rlib", "cdylib"]

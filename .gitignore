@@ -3,6 +3,6 @@
 /temp/
 /dist/
 /target/
-/example/target/
+/examples/*/target/
 *.pyc
 *.egg-info
