@@ -77,12 +77,12 @@ def _wrapper(f: Callable[[], Any]) -> Any:
             toolchain_name = toolchain.name
             if not _check_cargo(path):
                 continue
+
+            # amd64 binary can be executed on arm64 darwin, so additional filtering is needed.
             if platform.system() == "Darwin" and platform.machine().upper() in ["ARM64", "AARCH64"]:
                 if toolchain_name.find("aarch64") == -1:
-                    # x86_64 binary on arm64 macos
                     continue
 
-            # os.environ["CARGO"] = str(path)
             if "CARGO_HOME" not in os.environ:
                 os.environ["CARGO_HOME"] = str(TEMPDIR / "cargo")
             old_path = os.environ["PATH"]

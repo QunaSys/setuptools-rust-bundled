@@ -14,6 +14,7 @@ class bdist_wheel(_bdist_wheel):
     def run(self):
         global plat_name
         self.root_is_pure = False
+        self.universal = True
         plat_name = self.plat_name
         _bdist_wheel.run(self)
 
