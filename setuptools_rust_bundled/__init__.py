@@ -67,11 +67,18 @@ def _check_cargo(path: Path) -> bool:
     return True
 
 
+def _get_data_dir(package_name: str) -> Path:
+    for scheme in sysconfig.get_scheme_names():
+        data_dir = Path(sysconfig.get_path('data', scheme=scheme)) / package_name / "data"
+        if data_dir.is_dir():
+            return data_dir
+    raise RuntimeError("Cannot find data dir")
+
+
 def _wrapper(f: Callable[[], Any]) -> Any:
     package_name = __name__.split(".")[0]
-    data_dir = Path(sysconfig.get_path('data')) / package_name / "data"
-    if platform.system() == "Windows":
-        print(f"data files: {list(data_dir.glob('*'))}")
+    data_dir = _get_data_dir(package_name)
+    print(f"data files: {list(Path(sysconfig.get_path('data')).glob('*'))}")
     for toolchain in data_dir.iterdir():
         with as_file(toolchain) as path:
             toolchain_name = toolchain.name
