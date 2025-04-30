@@ -78,7 +78,6 @@ def _get_data_dir(package_name: str) -> Path:
 def _wrapper(f: Callable[[], Any]) -> Any:
     package_name = __name__.split(".")[0]
     data_dir = _get_data_dir(package_name)
-    print(f"data files: {list(Path(sysconfig.get_path('data')).glob('*'))}")
     for toolchain in data_dir.iterdir():
         with as_file(toolchain) as path:
             toolchain_name = toolchain.name

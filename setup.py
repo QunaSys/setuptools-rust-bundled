@@ -68,17 +68,21 @@ class install_data(_install_data):
                 arch = "powerpc"
             if arch == "ppc64":
                 arch = "powerpc64"
+            if arch == "ppc64le":
+                arch = "powerpc64le"
             if arch == "amd64":
                 arch = "x86_64"
             if arch == "armv7l":
                 # 'l' means little endian, that is default.
                 arch = "armv7"
+            if arch == "riscv64":
+                arch = "riscv64gc"
             if os_name == "manylinux":
                 if version:
                     major, minor = version.split("_")
                     if int(major) < 2 or (int(major) == 2 and int(minor) < 17):
                         raise RuntimeError(f"Glibc version {major}.{minor} is not supported ({platform_tag=})")
-                return [f"{arch}-unknown-linux-gnu{arch == 'armv7' and 'eabi' or ''}"]
+                return [f"{arch}-unknown-linux-gnu{arch == 'armv7' and 'eabihf' or ''}"]
 
             if os_name == "musllinux":
                 if version:

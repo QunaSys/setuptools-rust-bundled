@@ -3,6 +3,14 @@ name: Packaging and test
 on:
   push:
     branches: [main]
+    paths:
+      - ".github/workflows/package.yml"
+      - "MANIFEST.in"
+      - "pyproject.toml"
+      - "examples/**"
+      - "channel-rust-stable.toml"
+      - "setup.py"
+      - "setuptools_rust_bundled/**"
   release:
     types: [published]
 
@@ -40,7 +48,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: 
+        os:
           - ubuntu-latest
           - macos-13
           - macos-latest
@@ -100,6 +108,10 @@ jobs:
           - manylinux-2_17-i686
           - manylinux-2_17-x86_64
           - manylinux-2_17-aarch64
+          - manylinux-2_17-riscv64
+          - manylinux-2_17-armv7l
+          - manylinux-2_17-ppc64le
+          - manylinux-2_17-s390x
           - macosx-11_0-arm64
           - macosx-10_12-x86_64
           - win-amd64
@@ -149,7 +161,6 @@ jobs:
             plats: win-amd64
           - os: windows-11-arm
             plats: win-arm64
-        python-version: [ "11" ]
         kind:
           - setuptools
           - maturin
@@ -162,7 +173,7 @@ jobs:
       - uses: actions/setup-python@v5
         id: setup-python
         with:
-          python-version: "3.${{ matrix.python-version }}"
+          python-version: "3.11"
 
       - uses: actions/download-artifact@v4
         with:
@@ -211,8 +222,6 @@ jobs:
             arch: x86-64
             plats: netbsd-10_1-amd64
             pkg_cmd: sudo pkgin -y install
-        kind:
-          - setuptools
     steps:
       - uses: actions/checkout@v4
 
@@ -231,15 +240,55 @@ jobs:
           run: |
             ${{ matrix.system.pkg_cmd}} python311 py311-pip
             python3.11 -m pip install --upgrade pip
-            if [ ${{ matrix.kind }} = "setuptools" ]; then
-              python3.11 -m pip install wheel setuptools setuptools-rust
-            else
-              python3.11 -m pip install wheel maturin
-            fi
+            python3.11 -m pip install wheel setuptools setuptools-rust
             rm -rf setuptools_rust_bundled
             python3.11 -m pip install --user -v dist/*
-            find $HOME -name "setuptools_rust_bundled"
-            cd ./examples/${{ matrix.kind }}
+            cd ./examples/setuptools
             python3.11 -m pip install --no-build-isolation -v .
             cd ../..
-            python3.11 -c "import example; assert example.get_value() == 123; print('PASSED')"
+            python3.11 -c "import example; assert example.get_value() == 123"
+
+  test-bdist-docker:
+    name: 📋 bdist (docker)
+    needs: [build-bdist]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        system:
+          - platform: linux/s390x
+            plats: manylinux-2_17-s390x
+            image: debian:unstable-slim
+          - platform: linux/riscv64
+            plats: manylinux-2_17-riscv64
+            image: debian:unstable-slim
+          - platform: linux/arm/v7
+            plats: manylinux-2_17-armv7l
+            image: debian:unstable-slim
+          - platform: linux/ppc64le
+            plats: manylinux-2_17-ppc64le
+            image: debian:unstable-slim
+        kind:
+          - setuptools
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: setuptools_rust_bundled_bdist-${{ matrix.system.plats }}
+          path: dist
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: ${{ matrix.system.platform }}
+
+      - name: Run Command in Docker
+        run: |
+          docker run \
+            --rm \
+            -v $(pwd):/${{ github.workspace }} \
+            -w ${{ github.workspace }} \
+            --platform ${{ matrix.system.platform }} \
+            ${{ matrix.system.image }} \
+            bash -c "apt-get update && apt-get -y install python3 python3-dev python3-venv python3-pip && python3 -m venv ./venv && ./venv/bin/python3 -m pip install -U pip wheel setuptools setuptools-rust dist/* && cd ./examples/setuptools && ../../venv/bin/python3 -m pip install --no-build-isolation -v . && cd ../.. && ./venv/bin/python3 -c \"import example; assert example.get_value() == 123\" "
