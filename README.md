@@ -16,8 +16,8 @@ python setup.py bdist_wheel -p <platform>
 
 # Arch
 
-| Python platform tag | Rust target | sdist install tested | bdist install tested | setuptools | maturin |
-|------|------|-----|-----|-----|-----|
+| Python platform tag | Rust target | sdist install tested | maturin supported | setuptools supported |
+|------|------|-----|-----|-----|
 | manylinux_2_17_i686    | i686-unknown-linux-gnu | | | YES |
 | manylinux_2_17_x86_64  | x86_64-unknown-linux-gnu | YES | YES | YES |
 | manylinux_2_17_aarch64 | aarch64-unknown-linux-gnu | YES | YES | YES |
