@@ -15,6 +15,12 @@ It transparently wraps either setuptools-rust or maturin, downloading rustc, car
 - The wheel packages of setuptools-rust-bundled are shipped with toolchain binaries, so you can skip downloading or installing toolchain in build process.
 - setuptools-rust-bundled provides sdist, and wheels for many underlying environments, so you can support many systems just using this library.
 
+
+## 😊 Distribution
+
+- sdist package is distributed via [PyPI](https://pypi.org/project/setuptools-rust-bundled/).
+- wheel packages are available at [releases page](https://github.com/QunaSys/setuptools-rust-bundled/releases/)
+
 ## 🚀 Quick start
 Below are minimal pyproject.toml snippets for the two supported backends.
 

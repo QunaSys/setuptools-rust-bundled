@@ -11,8 +11,8 @@ on:
       - "channel-rust-stable.toml"
       - "setup.py"
       - "setuptools_rust_bundled/**"
-  release:
-    types: [published]
+    tags:
+      - "v*.*.*"
 
 jobs:
   build-sdist:
@@ -302,14 +302,14 @@ jobs:
           name: setuptools_rust_bundled
           pattern: setuptools_rust_bundled_*
 
-  release:
-    needs: [merge, test-sdist, test-bdist-bsd, test-bdist-docker]
-    if: github.event_name == 'release'
+  release-pypi:
+    needs: [build-sdist, test-sdist, test-bdist, test-bdist-bsd, test-bdist-docker]
+    if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: setuptools_rust_bundled
+          name: setuptools_rust_bundled_sdist
 
       - name: Install Twine
         run: python -m pip install twine==6.1.0 packaging==24.2
@@ -327,3 +327,20 @@ jobs:
         env:
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.TWINE_API_TOKEN }}
+
+  release-gh-actions:
+    needs: [merge, test-sdist, test-bdist, test-bdist-bsd, test-bdist-docker]
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: setuptools_rust_bundled
+
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            *.tar.gz
+            *.whl
+          draft: true
+          prerelease: false
