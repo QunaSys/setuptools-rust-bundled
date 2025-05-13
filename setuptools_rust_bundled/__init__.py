@@ -72,6 +72,10 @@ def _get_data_dir(package_name: str) -> Path:
         data_dir = Path(sysconfig.get_path('data', scheme=scheme)) / package_name / "data"
         if data_dir.is_dir():
             return data_dir
+    print(f"{package_name=}")
+    for scheme in sysconfig.get_scheme_names():
+        data_dir = Path(sysconfig.get_path('data', scheme=scheme)) / package_name / "data"
+        print(f"  {scheme=} {data_dir=} files={list(Path(sysconfig.get_path('data', scheme=scheme)).glob('*'))}")
     raise RuntimeError("Cannot find data dir")
 
 

@@ -22,4 +22,4 @@ keywords = ["setuptools", "rust", "build-backend"]
 license = { text = "MIT" }
 classifiers = ["Programming Language :: Python :: 3"]
 dependencies = ["requests", 'importlib-metadata; python_version<"3.10"']
-version = "0.1.0"
+version = "0.1.1"
