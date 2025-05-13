@@ -5,11 +5,11 @@ from importlib.resources import files, as_file
 import sysconfig
 from pathlib import Path
 import os
-from typing import Iterable, List, Dict, Callable, Any, Optional
+from typing import Iterable, List, Dict, Callable, Any, Optional, Union
 
 
 class LibraryPath:
-    def __init__(self, paths: Iterable[str | os.PathLike]) -> None:
+    def __init__(self, paths: Iterable[Union[str, os.PathLike]]) -> None:
         self.paths: List[str] = [str(Path(p).expanduser().resolve()) for p in paths]
         self.system: str = platform.system()
         self._handles: List[object] = []

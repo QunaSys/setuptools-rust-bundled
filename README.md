@@ -102,10 +102,13 @@ pip install --no-build-isolation -v .
 | manylinux_2_17_i686    | i686-unknown-linux-gnu | | | YES |
 | manylinux_2_17_x86_64  | x86_64-unknown-linux-gnu | YES | YES | YES |
 | manylinux_2_17_aarch64 | aarch64-unknown-linux-gnu | YES | YES | YES |
-| manylinux_2_17_riscv64 | aarch64-unknown-linux-gnu | | | YES |
-| manylinux_2_17_armv7l  | armv7-unknown-linux-gnueabihf | | | YES |
-| manylinux_2_17_ppc64le | powerpc64le-unknown-linux-gnu | | | YES |
-| manylinux_2_17_s390x   | s390x-unknown-linux-gnu | | | YES |
+| manylinux_2_17_riscv64 | riscv64gc-unknown-linux-gnu | | | YES |
+| manylinux_2_17_armv7l  | armv7-unknown-linux-gnueabihf | | YES | YES |
+| manylinux_2_17_ppc64le | powerpc64le-unknown-linux-gnu | | YES | YES |
+| manylinux_2_17_s390x   | s390x-unknown-linux-gnu | | YES | YES |
+| musllinux_1_2_x86_64 | x86_64-unknown-linux-musl | | | YES |
+| musllinux_1_2_aarch64 | aarch64-unknown-linux-musl | | | YES |
+| musllinux_1_2_ppc64le | powerpc64le-unknown-linux-musl | | | YES |
 | win_amd64 | x86_64-pc-windows-msvc | YES | YES | YES |
 | win_arm64 | aarch64-pc-windows-msvc | YES | YES | YES |
 | macosx_11_0_arm64 | aarch64-apple-darwin | YES | YES | YES |
@@ -122,3 +125,11 @@ This library supports freebsd_12_0_release or upper. Rename the distributed whee
 ## For NetBSD
 
 This library supports netbsd_9_0 or upper. Rename the distributed wheel package of setuptools-rust-bundled to the system's correct version.
+
+## For Alpine
+
+Users should install following modules:
+
+```sh
+apk --update-cache add musl build-base python3 py3-pip
+```
