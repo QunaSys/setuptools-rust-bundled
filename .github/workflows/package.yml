@@ -81,18 +81,27 @@ jobs:
           [[ "${{ runner.os }}" = "Windows" ]] && python -X utf8 script.py || true
           yes | rustup self uninstall || true
           python -m pip install --upgrade pip
-          if [ ${{ matrix.kind }} = "setuptools" ]; then
-            python -m pip install wheel setuptools setuptools-rust
-          else
-            python -m pip install wheel maturin
-          fi
           rm -rf setuptools_rust_bundled
+
+      - name: modify pyproject.toml
+        run: |
+          if [[ "${{ runner.os }}" = "macOS" ]]; then
+            export SED_CMD="sed -i ''"
+          else
+            export SED_CMD="sed -i"
+          fi
+          find "$PWD/dist" -name '*.whl' | while read file; do
+            if [[ "${{ runner.os }}" = "Windows" ]]; then
+              file="$(echo "$file" | sed -e 's:^/\(.\)/:\1\\\:/:')"
+            fi
+            $SED_CMD -e 's:^\(requires =.*\)\("setuptools-rust-bundled".*\)$:\1"setuptools-rust-bundled@file\://'$file'", \2:' ./examples/${{ matrix.kind }}/pyproject.toml
+          done
 
       - name: installing setuptools-rust-bundled
         run: python -m pip install -v dist/*
 
       - name: installing example
-        run: python -m pip install --no-build-isolation -v ./examples/${{ matrix.kind }}
+        run: python -m pip install -v ./examples/${{ matrix.kind }}
       
       - name: executing
         run: |
@@ -194,20 +203,27 @@ jobs:
           [[ "${{ runner.os }}" = "Windows" ]] && python -X utf8 script.py || true
           yes | rustup self uninstall || true
           python -m pip install --upgrade pip
-          if [ ${{ matrix.kind }} = "setuptools" ]; then
-            python -m pip install wheel setuptools setuptools-rust
-          else
-            python -m pip install wheel maturin
-          fi
           rm -rf setuptools_rust_bundled
 
-      - name: installing setuptools-rust-bundled
-        run: python -m pip install -v dist/*
+      - name: modify pyproject.toml
+        run: |
+          if [[ "${{ runner.os }}" = "macOS" ]]; then
+            export SED_CMD="sed -i ''"
+          else
+            export SED_CMD="sed -i"
+          fi
+          find "$PWD/dist" -name '*.whl' | while read file; do
+            echo "file:" $file
+            if [[ "${{ runner.os }}" = "Windows" ]]; then
+              file="$(echo "$file" | sed -e 's:^/\(.\)/:\1\\\:/:')"
+            fi
+            $SED_CMD -e 's:^\(requires = \[.*\)\("setuptools-rust-bundled".*\]\)$:\1"setuptools-rust-bundled@file\://'$file'", \2:' ./examples/${{ matrix.kind }}/pyproject.toml
+          done
 
       - name: installing example
         run: |
           cd ./examples/${{ matrix.kind }}
-          python -m pip install --no-build-isolation -v .
+          python -m pip install -v .
           cd ../..
       
       - name: executing

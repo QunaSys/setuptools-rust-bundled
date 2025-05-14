@@ -68,12 +68,16 @@ def _check_cargo(path: Path) -> bool:
 
 
 def _get_data_dir(package_name: str) -> Path:
-    print(f"{package_name=}")
-    data_dirs = [Path(__file__).parent.parent.parent]
+    data_dirs = [
+        Path(__file__).parent.parent.parent,
+        Path(__file__).parent.parent.parent.parent,
+        Path(__file__).parent.parent.parent.parent.parent,
+    ]
     data_dirs += [
         Path(sysconfig.get_path('data', scheme=scheme))
         for scheme in sysconfig.get_scheme_names()
     ]
+    print(data_dirs)
     for d in data_dirs:
         data_dir = d / package_name / "data"
         if data_dir.is_dir():
