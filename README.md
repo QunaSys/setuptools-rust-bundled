@@ -60,6 +60,32 @@ python-source = "."
 module-name = "example.example"
 ```
 
+### 3. using wheel version of setuptools-rust-bundled
+
+We distribute wheel packages of setuptools-rust-bundled via GitHub Release. To use it as build backend, follow this example:
+
+```pyproject.toml
+[build-system]
+requires = [
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.3/setuptools_rust_bundled-0.1.3-py3-none-manylinux_2_17_x86_64.whl ; sys_platform=='linux' and platform_machine=='x86_64'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.3/setuptools_rust_bundled-0.1.3-py3-none-macosx_11_0_arm64.whl ; sys_platform=='darwin' and platform_machine== 'arm64'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.3/setuptools_rust_bundled-0.1.3-py3-none-macosx_10_12_x86_64.whl ; sys_platform=='darwin' and platform_machine== 'x86_64'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.3/setuptools_rust_bundled-0.1.3-py3-none-win_amd64.whl ; sys_platform=='windows' and platform_machine=='amd64'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.3/setuptools_rust_bundled-0.1.3-py3-none-manylinux_2_17_aarch64.whl ; sys_platform=='linux' and platform_machine=='aarch64'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.3/setuptools_rust_bundled-0.1.3-py3-none-manylinux_2_17_armv7l.whl ; sys_platform=='linux' and platform_machine=='armv7l'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.3/setuptools_rust_bundled-0.1.3-py3-none-manylinux_2_17_i686.whl ; sys_platform=='linux' and platform_machine=='i686'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.3/setuptools_rust_bundled-0.1.3-py3-none-manylinux_2_17_ppc64le.whl ; sys_platform=='linux' and platform_machine=='ppc64le'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.3/setuptools_rust_bundled-0.1.3-py3-none-manylinux_2_17_riscv64.whl ; sys_platform=='linux' and platform_machine=='riscv64'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.3/setuptools_rust_bundled-0.1.3-py3-none-manylinux_2_17_s390x.whl ; sys_platform=='linux' and platform_machine=='s390x'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.3/setuptools_rust_bundled-0.1.3-py3-none-win_arm64.whl ; sys_platform=='windows' and platform_machine=='arm64'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.3/setuptools_rust_bundled-0.1.3-py3-none-freebsd_14_2_release_amd64.whl ; sys_platform=='freebsd' and platform_machine=='amd64'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.3/setuptools_rust_bundled-0.1.3-py3-none-netbsd_10_1_amd64.whl ; sys_platform=='netbsd' and platform_machine=='amd64'",
+  "setuptools-rust-bundled==0.1.3",
+  # other deps
+]
+# ...
+```
+
 ## 📝 Developing setuptools-rust-bundled
 
 ### Build setuptools-rust-bundled
