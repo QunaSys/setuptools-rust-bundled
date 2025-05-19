@@ -1,5 +1,8 @@
+from sys import set_coroutine_origin_tracking_depth
 import sysconfig
+import os
 import setuptools
+import shutil
 try:
     from setuptools.command.bdist_wheel import bdist_wheel as _bdist_wheel
 except ModuleNotFoundError:
@@ -111,6 +114,27 @@ class install_data(_install_data):
             return [f"{arch}-unknown-{os_name}{os_name == 'linux' and '-gnu' or ''}"]
 
 
+        def install_nt(extracted_path: Path, dest_dir: Path) -> None:
+            components = (extracted_path / "components").read_text().split("\n")
+            for component in components:
+                if component == "":
+                    continue
+                component_dir = extracted_path / component
+                if not component_dir.is_dir():
+                    raise RuntimeError(f"Cannot find toolchain {component} in {extracted_path}")
+                print(f"Copying {component_dir} to {dest_dir}")
+                shutil.copytree(component_dir, dest_dir, dirs_exist_ok=True)
+
+
+        def install_unix(extracted_path: Path, dest_dir: Path) -> None:
+            script_file = extracted_path / "install.sh"
+            args = ["bash", str(script_file), f"--prefix={str(dest_dir)}", "--verbose"]
+            if platform.system() == "Linux":
+                args.append("--disable-ldconfig")
+            print(f"Executing {args}")
+            subprocess.run(args, check=True)
+
+
         def build_data_files(plat_name: str) -> List[tuple[str, List[str]]]:
             data_files = []
             print(f"📦 setup hook: plat_name = {plat_name}")
@@ -136,6 +160,7 @@ class install_data(_install_data):
                 for host_triple in host_triples:
                     dest_dir_host = dest_dir / host_triple
                     dest_dir_host.mkdir(exist_ok=True)
+                    print(f"{dest_dir_host=}")
 
                     record_pkg = manifest_data["pkg"][pkg]["target"]
                     if not host_triple in record_pkg:
@@ -168,13 +193,13 @@ class install_data(_install_data):
                             tar.extractall(path=temp_dir)
                         print("Finished extracting")
 
-                    script_file = extracted_path / "install.sh"
-                    args = ["bash", str(script_file), f"--prefix={str(dest_dir_host)}"]
-                    if platform.system() == "Linux":
-                        args.append("--disable-ldconfig")
-                    print(f"Executing {args}")
-                    subprocess.run(args)
-                    print("Finished executing")
+                    print(f"Installing {extracted_path} to {dest_dir_host}")
+                    if os.name == "nt":
+                        install_nt(extracted_path, dest_dir_host)
+                    else:
+                        install_unix(extracted_path, dest_dir_host)
+                    print("Install finished")
+                    print(f"{list(dest_dir_host.glob('*'))=}")
                     for file in dest_dir_host.glob("**/*"):
                         if file.is_file():
                             relpath = file.parent.relative_to(script_dir)
