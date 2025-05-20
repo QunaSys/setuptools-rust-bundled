@@ -53,10 +53,15 @@ jobs:
           - macos-13
           - macos-latest
           - ubuntu-24.04-arm
+          - windows-latest
+          - windows-11-arm
         python-version: [ "9", "11", "13" ]
         kind:
           - setuptools
           - maturin
+        exclude:
+          - python-version: "9"
+            os: "windows-11-arm"
     defaults:
       run:
         shell: bash
@@ -98,10 +103,10 @@ jobs:
           done
 
       - name: installing setuptools-rust-bundled
-        run: python -m pip install -v dist/*
+        run: python -m pip install -vv dist/*
 
       - name: installing example
-        run: python -m pip install -v ./examples/${{ matrix.kind }}
+        run: python -m pip install -vv ./examples/${{ matrix.kind }}
       
       - name: executing
         run: |
