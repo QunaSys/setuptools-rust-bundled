@@ -2,7 +2,7 @@ name: Packaging and test
 
 on:
   push:
-    branches: [main, fix_win_ci]
+    branches: [main]
     paths:
       - ".github/workflows/package.yml"
       - "MANIFEST.in"
