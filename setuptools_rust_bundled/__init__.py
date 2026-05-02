@@ -101,11 +101,21 @@ def _wrapper(f: Callable[[], Any]) -> Any:
 
             if "CARGO_HOME" not in os.environ:
                 os.environ["CARGO_HOME"] = str(TEMPDIR / "cargo")
-            old_path = os.environ["PATH"]
-            path_list = [str(path / 'bin'), str(TEMPDIR / "cargo" / "bin")]
+            old_path = os.environ.get("PATH")
+            rust_tools_bin = path / "lib" / "rustlib" / toolchain_name / "bin"
+            path_list = [str(path / 'bin'), str(rust_tools_bin), str(TEMPDIR / "cargo" / "bin")]
             os.environ["PATH"] = f"{os.pathsep.join(path_list)}{os.pathsep + old_path if old_path is not None else ''}"
             rustlib_path = toolchain / "lib" / "rustlib" / toolchain_name / "lib"
-            os.environ["RUSTFLAGS"] = f"-L {str(rustlib_path)}"
+            rustflags = os.environ.get("RUSTFLAGS", "")
+            if (
+                platform.system() == "Linux"
+                and toolchain_name == "x86_64-unknown-linux-gnu"
+            ):
+                if "link-self-contained" not in rustflags:
+                    rustflags = f"{rustflags} -Clink-self-contained=off".strip()
+                if "linker-features" not in rustflags:
+                    rustflags = f"{rustflags} -Clinker-features=-lld".strip()
+            os.environ["RUSTFLAGS"] = f"{rustflags} -L {str(rustlib_path)}".strip()
             with LibraryPath([str(toolchain / "lib")]):
                 result = f()
             if old_path is None:
