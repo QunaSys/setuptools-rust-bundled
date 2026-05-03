@@ -1,7 +1,7 @@
 # setuptools-rust-bundled ![rustc] ![cargo] [![Packaging and test]][Packaging and test url] [![PyPI]][PyPI url]
 
-[rustc]: https://img.shields.io/badge/rustc-1.86-green.svg
-[cargo]: https://img.shields.io/badge/cargo-0.87-green.svg
+[rustc]: https://img.shields.io/badge/rustc-1.95-green.svg
+[cargo]: https://img.shields.io/badge/cargo-0.96-green.svg
 [Packaging and test]: https://github.com/QunaSys/setuptools-rust-bundled/actions/workflows/package.yml/badge.svg
 [Packaging and test url]: https://github.com/QunaSys/setuptools-rust-bundled/actions/workflows/package.yml
 [PyPI]: https://img.shields.io/pypi/pyversions/setuptools-rust-bundled
@@ -67,20 +67,20 @@ We distribute wheel packages of setuptools-rust-bundled via GitHub Release. To u
 ```pyproject.toml
 [build-system]
 requires = [
-  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.4/setuptools_rust_bundled-0.1.4-py3-none-manylinux_2_17_x86_64.whl ; sys_platform=='linux' and platform_machine=='x86_64'",
-  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.4/setuptools_rust_bundled-0.1.4-py3-none-macosx_11_0_arm64.whl ; sys_platform=='darwin' and platform_machine== 'arm64'",
-  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.4/setuptools_rust_bundled-0.1.4-py3-none-macosx_10_12_x86_64.whl ; sys_platform=='darwin' and platform_machine== 'x86_64'",
-  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.4/setuptools_rust_bundled-0.1.4-py3-none-win_amd64.whl ; sys_platform=='win32' and platform_machine=='AMD64'",
-  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.4/setuptools_rust_bundled-0.1.4-py3-none-manylinux_2_17_aarch64.whl ; sys_platform=='linux' and platform_machine=='aarch64'",
-  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.4/setuptools_rust_bundled-0.1.4-py3-none-manylinux_2_17_armv7l.whl ; sys_platform=='linux' and platform_machine=='armv7l'",
-  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.4/setuptools_rust_bundled-0.1.4-py3-none-manylinux_2_17_i686.whl ; sys_platform=='linux' and platform_machine=='i686'",
-  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.4/setuptools_rust_bundled-0.1.4-py3-none-manylinux_2_17_ppc64le.whl ; sys_platform=='linux' and platform_machine=='ppc64le'",
-  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.4/setuptools_rust_bundled-0.1.4-py3-none-manylinux_2_17_riscv64.whl ; sys_platform=='linux' and platform_machine=='riscv64'",
-  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.4/setuptools_rust_bundled-0.1.4-py3-none-manylinux_2_17_s390x.whl ; sys_platform=='linux' and platform_machine=='s390x'",
-  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.4/setuptools_rust_bundled-0.1.4-py3-none-win_arm64.whl ; sys_platform=='win32' and platform_machine=='ARM64'",
-  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.4/setuptools_rust_bundled-0.1.4-py3-none-freebsd_14_2_release_amd64.whl ; sys_platform=='freebsd14' and platform_machine=='amd64'",
-  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.4/setuptools_rust_bundled-0.1.4-py3-none-netbsd_10_1_amd64.whl ; sys_platform=='netbsd10' and platform_machine=='amd64'",
-  "setuptools-rust-bundled==0.1.4",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.5/setuptools_rust_bundled-0.1.5-py3-none-manylinux_2_17_x86_64.whl ; sys_platform=='linux' and platform_machine=='x86_64'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.5/setuptools_rust_bundled-0.1.5-py3-none-macosx_11_0_arm64.whl ; sys_platform=='darwin' and platform_machine== 'arm64'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.5/setuptools_rust_bundled-0.1.5-py3-none-macosx_10_12_x86_64.whl ; sys_platform=='darwin' and platform_machine== 'x86_64'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.5/setuptools_rust_bundled-0.1.5-py3-none-win_amd64.whl ; sys_platform=='win32' and platform_machine=='AMD64'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.5/setuptools_rust_bundled-0.1.5-py3-none-manylinux_2_17_aarch64.whl ; sys_platform=='linux' and platform_machine=='aarch64'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.5/setuptools_rust_bundled-0.1.5-py3-none-manylinux_2_17_armv7l.whl ; sys_platform=='linux' and platform_machine=='armv7l'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.5/setuptools_rust_bundled-0.1.5-py3-none-manylinux_2_17_i686.whl ; sys_platform=='linux' and platform_machine=='i686'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.5/setuptools_rust_bundled-0.1.5-py3-none-manylinux_2_17_ppc64le.whl ; sys_platform=='linux' and platform_machine=='ppc64le'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.5/setuptools_rust_bundled-0.1.5-py3-none-manylinux_2_17_riscv64.whl ; sys_platform=='linux' and platform_machine=='riscv64'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.5/setuptools_rust_bundled-0.1.5-py3-none-manylinux_2_17_s390x.whl ; sys_platform=='linux' and platform_machine=='s390x'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.5/setuptools_rust_bundled-0.1.5-py3-none-win_arm64.whl ; sys_platform=='win32' and platform_machine=='ARM64'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.5/setuptools_rust_bundled-0.1.5-py3-none-freebsd_14_2_release_amd64.whl ; sys_platform=='freebsd14' and platform_machine=='amd64'",
+  "setuptools-rust-bundled@https://github.com/QunaSys/setuptools-rust-bundled/releases/download/v0.1.5/setuptools_rust_bundled-0.1.5-py3-none-netbsd_10_1_amd64.whl ; sys_platform=='netbsd10' and platform_machine=='amd64'",
+  "setuptools-rust-bundled==0.1.5",
   # ... other deps (like setuptools, setuptools-rust, maturin)
 ]
 # ...
@@ -117,9 +117,9 @@ pip install --no-build-isolation -v .
 
 | Tool     | Version |
 |----------|----------|
-| rustc    | 1.86.0   |
-| cargo    | 0.87.0   |
-| rust-std    | 1.86.0   |
+| rustc    | 1.95.0   |
+| cargo    | 0.96.0   |
+| rust-std    | 1.95.0   |
 
 # 💻 Supported systems
 

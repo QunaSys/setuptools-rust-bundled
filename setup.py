@@ -154,7 +154,9 @@ class install_data(_install_data):
             temp_dir.mkdir(exist_ok=True)
 
             profile = "minimal"
-            profile_pkgs = manifest_data["profiles"][profile]
+            profile_pkgs = list(manifest_data["profiles"][profile])
+            if "llvm-tools-preview" not in profile_pkgs:
+                profile_pkgs.append("llvm-tools-preview")
 
             for pkg in profile_pkgs:
                 for host_triple in host_triples:
